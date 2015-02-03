@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import example.vlad.mailmapview.cache.Tile;
 
 
-public class LoadTileCommand extends HttpCommand<Tile, Void> {
+public class LoadTileCommand extends HttpCommand<Tile, Tile> {
 
     private static final String URL = "http://b.tile.opencyclemap.org/cycle/16";
 
@@ -23,21 +23,20 @@ public class LoadTileCommand extends HttpCommand<Tile, Void> {
     }
 
     @Override
-    protected Void processResponse(InputStream input) {
+    protected Result<Tile> processResponse(InputStream input) throws IOException {
         Uri imageUri = mContext.getContentResolver().insert(Tile.CONTENT_URI, getParams().getContentValues(mContext));
         OutputStream output = null;
         try {
             output = mContext.getContentResolver().openOutputStream(imageUri);
             fromInputToOutput(input, output);
+            return new Result.Ok<Tile>(null);
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             close(output);
         }
-        return null;
+        return new Result.FileError<Tile>();
     }
 
     private void fromInputToOutput(InputStream input, OutputStream output) throws IOException {

@@ -68,7 +68,7 @@ public class Tile {
     }
 
     public String getTag() {
-        return String.valueOf(mX) + mY;
+        return "x" + mX + "y" + mY;
     }
 
     public ContentValues getContentValues(Context context) {

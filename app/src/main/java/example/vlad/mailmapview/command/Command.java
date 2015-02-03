@@ -1,30 +1,9 @@
 package example.vlad.mailmapview.command;
 
 
-import java.io.Closeable;
-import java.io.IOException;
+public interface Command<T, V> {
 
-public abstract class Command<T, V> {
+    public V execute();
 
-    private T mParams;
-
-    public Command(T params) {
-        mParams = params;
-    }
-
-    public T getParams() {
-        return mParams;
-    }
-
-    public abstract V execute();
-
-    protected void close(Closeable closeable) {
-        if (closeable != null){
-            try {
-                closeable.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    public T getParams();
 }

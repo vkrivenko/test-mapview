@@ -2,7 +2,6 @@ package example.vlad.mailmapview.command;
 
 import org.apache.http.HttpStatus;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -10,7 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public abstract class HttpCommand<T, V> extends Command<T, V> {
+public abstract class HttpCommand<T, V> extends BaseCommand<T, V> {
 
     private static final int CONNECT_TIMEOUT = 15000;
 
@@ -19,7 +18,7 @@ public abstract class HttpCommand<T, V> extends Command<T, V> {
     }
 
     @Override
-    public V execute() {
+    public Result<V> execute() {
         HttpURLConnection connection = null;
         InputStream is = null;
         try {
@@ -30,9 +29,7 @@ public abstract class HttpCommand<T, V> extends Command<T, V> {
 
             if (connection.getResponseCode() == HttpStatus.SC_OK) {
                 is = connection.getInputStream();
-                processResponse(is);
-            } else {
-                //TODO
+                return processResponse(is);
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -44,10 +41,10 @@ public abstract class HttpCommand<T, V> extends Command<T, V> {
                 connection.disconnect();
             }
         }
-        return null;
+        return new Result.NetworkError();
     }
 
-    protected abstract V processResponse(InputStream is);
+    protected abstract Result<V> processResponse(InputStream is) throws IOException;
 
     protected abstract String prepareUrl();
 

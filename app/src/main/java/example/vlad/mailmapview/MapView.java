@@ -21,7 +21,7 @@ import example.vlad.mailmapview.cache.Tile;
 
 public class MapView extends ViewGroup {
 
-    private static final int CACHE_SIZE = 5 * 1024;
+    private static final int CACHE_SIZE = 100;
 
     private final GestureDetector mGestureDetector;
 
